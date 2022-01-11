@@ -10,20 +10,16 @@ yarn start
 ## Example
 
 ```js
-    query {
-        Asset {
-            getList {
-                items {
-                    id
-                    description
-                    createdAt
-                    assetClass {
-                        id
-                        name
-                        description
-                    }
-                }
-            }
+    query { 
+        getAssetList {  
+            id
+            description
+            createdAt
+            assetClass {
+                id
+                name
+                description
+            }  
         }
     }
 ```

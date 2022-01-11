@@ -81,101 +81,30 @@ const assetSchema = makeExecutableSchema({
         address: Order
     }
 
-    type AssetPayload {
-        item: Asset
-    }
-
-    type AssetsPayload {
-        items: [Asset!]
-        pageInfo: PaginationInfo
-    }
-
     input AssetWhereUniqueInput {
         id: ID
     }
 
-    input AssetCreateInput {
-        id: ID!
-        name: String!
-        description: String
-        address: String
-        lat: Latitude
-        lon: Longitude
-    }
-
-    input AssetUpdateInput {
-        name: String
-        description: String
-        address: String
-        lat: Latitude
-        lon: Longitude
-    }
-
-    type AssetQuery {
-        getOne(where: AssetWhereUniqueInput!): AssetPayload!
-        getList(filter: AssetFilter = {} sort: [AssetSort! ] = [{id: asc}] page: Int = 1 perPage: Int = 100): AssetsPayload!
-        getMany(ids: [ID!]!): AssetsPayload!
-    }
-
-    type AssetMutation {
-        create(input: AssetCreateInput!): AssetPayload! 
-        update( where: AssetWhereUniqueInput! input: AssetUpdateInput!): AssetPayload!       
-    }
 
     type Query {
-        Asset: AssetQuery
-    }
-
-    type Mutation {
-        Asset: AssetMutation
+      getAssetOne(where: AssetWhereUniqueInput!): Asset!
+      getAssetList(filter: AssetFilter = {} sort: [AssetSort! ] = [{id: asc}] page: Int = 1 perPage: Int = 100): [Asset!]!
+      getAssetMany(ids: [ID!]!): [Asset!]!
     }
   `,
   resolvers: {
-    AssetQuery: {
-        getOne: async (root, args) => {
-          const { where: { id } } = args
-          return { item : assetsData.find(ad => ad.id == id)}
-        },
-        getList: async (root, args) => {
-          return { items: assetsData };
-        },
-        getMany: async (root, args) => {
-          const { ids } = args;
-          return { items: assetsData.filter(ad => ids.indexOf(ad.id) > -1) };
-        },
-    },
-    AssetMutation: {
-        create: async (root, args) => {
-          const { input = {} } = args
-          const item = {
-              ...input,
-              updatedAt: (new Date()).toISOString(),
-              createdAt: (new Date()).toISOString(),
-              createdById: 'ck5mf70jj00004cnpse6wpqyr',
-              deleted: false
-          }
-          assetsData.push(item);
-          return { item }
-        },
-        update: async (root, args) => {
-          const { where : { id }, input = {} } = args
-          const item = assetsData.find(ad => ad.id == id);
-          if(item) {
-            for (const key in input) {
-              item[key] = input[key];
-            }
-            item.updatedAt = (new Date()).toISOString();           
-          } else {
-            throw new Error('Not found asset');
-          }
-          return { item };
-        }    
-    },
     Query: {
-        Asset: () => ({}),
-    },
-    Mutation: {
-        Asset: () => ({}),
+        getAssetOne: async (root, args) => {
+          const { where: { id } } = args
+          return assetsData.find(ad => ad.id == id)
+        },
+        getAssetList: async (root, args) => {
+          return assetsData;
+        },
+        getAssetMany: async (root, args) => {
+          const { ids } = args;
+          return assetsData.filter(ad => ids.indexOf(ad.id) > -1);
+        },
     }
   }
 });

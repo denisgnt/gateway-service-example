@@ -12,7 +12,7 @@ const makeGatewaySchema = async() => {
                 schema: assetSchema,
                 merge: { 
                     Asset: {
-                        fieldName: 'getMany',
+                        fieldName: 'getAssetMany',
                         selectionSet: '{ id }',
                         key: ({ id }) => id,
                         argsFromKeys: ids => ({ ids })
@@ -22,13 +22,13 @@ const makeGatewaySchema = async() => {
             },
             {
                 schema: assetclassSchema,
-                merge: { 
+                merge: {
                     Asset: {
-                        fieldName: 'getMany',
-                        selectionSet: '{ id }',
-                        key: ({ id }) => id,
-                        argsFromKeys: ids => ({ ids })
-                    },    
+                      fieldName: 'getAssetMany',
+                      selectionSet: '{ id }',
+                      key: ({ id }) => id,
+                      argsFromKeys: ids => ({ ids })
+                    }
                 }
             }
         ],      
